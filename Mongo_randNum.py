@@ -30,8 +30,9 @@ title1.grid(row=0, column=0, sticky='w')
 fig = plt.figure(figsize=[6, 6])
 x_format = matplotlib.dates.DateFormatter('%m-%d %H:%M')
 plt.autoscale(enable=True, axis='x', tight=False)
-ax = plt.subplot(111)
-ax.set_ylim([0, 4])
+plt.xlabel("Time")
+plt.ylabel("Voltage(V)")
+plt.ylim(0, 3.5)
 
 
 canvas = FigureCanvasTkAgg(fig, master=Window1)  # A tk.DrawingArea.
@@ -57,25 +58,21 @@ def update_plot():
     dates = [0]*10
     for document in cursor:
         #print(document["Random_Num"])
-        y_plot[count] = int(document["Random_Num"])
+        y_plot[count] = float(document["Random_Num"])
         print(str(document["Random_Num"]))
         dt_object = datetime.datetime.fromtimestamp(document["Time_stamp"])
         dates[count] = dt_object
         count += 1
-    #dt_object = datetime.datetime.fromtimestamp(x_plot)
-    #dates = matplotlib.dates.date2num(dt_object)
-    #matplotlib.pyplot.plot_date(dates, y_plot)   
-    #line.set_xdata(numpy.append(line.get_xdata(), x_plot))
-    #line.set_ydata(numpy.append(line.get_ydata(), y_plot))
+
     x_format = matplotlib.dates.DateFormatter('%m/%d %H:%M:%S')
-    ax.xaxis.set_major_formatter(x_format)
+    plt.gca().xaxis.set_major_formatter(x_format)
     # beautify the x-labels
     plt.gcf().autofmt_xdate()
-    plt.autoscale(enable=True, axis='both', tight=True)
-    ax.plot(dates, y_plot, 'b')
-    #plt.plot(x_plot, y_plot, 'b')
+    plt.autoscale(enable=True, axis='x', tight=True)
+    plt.plot(dates, y_plot, 'b')
+    
     fig.canvas.draw()
-    #fig.canvas.flush_events()
+    fig.canvas.flush_events()
     Window1.after(1, update_plot) 
 
 Window1.after(1, update_plot)    
